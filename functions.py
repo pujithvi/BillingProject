@@ -112,7 +112,7 @@ def createStartDate(mostRecentDate, account):
     return startDate
 
 
-def getGasUsage(account, startDate):
+def getMeter(account):
     cur = con.cursor()
     serviceAgreementIDBind = cur.var(str)
 
@@ -163,6 +163,12 @@ def getGasUsage(account, startDate):
 
     # cur.execute(sql_join, account = account)
     # meterConfigID = cur.fetchall()
+
+    return meterConfigID
+
+
+def getGasUsage(meterConfigID, startDate):
+    cur = con.cursor()
 
     InitialReadBind = cur.var(int)
 
