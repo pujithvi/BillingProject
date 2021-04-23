@@ -112,7 +112,9 @@ def createStartDate(mostRecentDate, account):
     return startDate
 
 
-def getMeter(account):
+# Gets meter corresponding to account; may need to modify if one account can have mutliple meters
+
+def getMeter(account):  # Split into three methods—getSA, getSP, getMeter
     cur = con.cursor()
     serviceAgreementIDBind = cur.var(str)
 
@@ -164,6 +166,8 @@ def getMeter(account):
     # cur.execute(sql_join, account = account)
     # meterConfigID = cur.fetchall()
 
+    cur.close()
+
     return meterConfigID
 
 
@@ -174,13 +178,15 @@ def getGasUsage(meterConfigID, startDate):
 
     plsql_retrieveInitialRead = (
         'begin'
-        'select REG_READING into :InitialReadBind'
-        # Don't think 'READ_DTTM = :startDate' is right
-        'from HS_CI_MR where MTR_CONFIG_ID = :meterConfigID and READ_DTTM = :startDate'
+        'select top 1 REG_READING into :InitialReadBind'
+        'from HS_CI_MR where MTR_CONFIG_ID = :meterConfigID and READ_DTTM >= :startDate and READ_TYPE_FLG != \'20\''
+        'end'
     )
 
     cur.execute(plsql_retrieveInitialRead,
                 InitialReadBind=InitialReadBind, startDate=startDate)
+
+    # May need to do something with READ_TYPE_FLG
 
     initialReading = InitialReadBind.getValue()
 
@@ -188,15 +194,18 @@ def getGasUsage(meterConfigID, startDate):
 
     plsql_retrieveFinalRead = (
         'begin'
-        'select REG_READING into :FinalReadBind'
-        # Don't think 'READ_DTTM = :startDate' is right
-        'from HS_CI_MR where MTR_CONFIG_ID = :meterConfigID and READ_DTTM = :endDate'
+        'select top 1 REG_READING into :FinalReadBind'
+        'from HS_CI_MR where MTR_CONFIG_ID = :meterConfigID and READ_DTTM >= :startDate and READ_TYPE_FLG != \'20\''
+        'order by READ_DTTM desc'
+        'end'
     )
 
     # What is the endDate? It's not today's date I think
     cur.execute(plsql_retrieveFinalRead,
-                FinalReadBind=FinalReadBind, endDate=date.today())
+                FinalReadBind=FinalReadBind, startDate=startDate)
 
     finalReading = FinalReadBind.getValue()
+
+    cur.close()
 
     return finalReading - initialReading
