@@ -112,9 +112,11 @@ def createStartDate(mostRecentDate, account):
     return startDate
 
 
-# Gets meter corresponding to account; may need to modify if one account can have mutliple meters
+# May need to modify if one account can have multiple meters
 
-def getMeter(account):  # Split into three methods—getSA, getSP, getMeter
+
+# Gets SA corresponding to account
+def getSA(account):
     cur = con.cursor()
     serviceAgreementIDBind = cur.var(str)
 
@@ -130,33 +132,53 @@ def getMeter(account):  # Split into three methods—getSA, getSP, getMeter
 
     serviceAgreementID = serviceAgreementIDBind.getValue()
 
+    cur.close()
+
+    return serviceAgreementID
+
+
+# Gets SP corresponding to SA
+def getSP(serviceAgreementID):
+    cur = con.cursor()
     servicePointIDBind = cur.var(str)
 
     plsql_selectSP_ID = (
         'begin'
         'select SP_ID into :servicePointIDBind'
-        'from HS_CI_SA_SP where SA_ID = :serviceAgreementIDBind2'
+        'from HS_CI_SA_SP where SA_ID = :serviceAgreementIDBind'
         'end'
     )
 
     cur.execute(plsql_selectSP_ID, servicePointIDBind=servicePointIDBind,
-                serviceAgreementIDBind2=serviceAgreementID)
+                serviceAgreementIDBind=serviceAgreementID)
 
     servicePointID = servicePointIDBind.getValue()
 
+    cur.close()
+
+    return servicePointID
+
+
+# Gets ID of meter corresponding to SP
+def getMeter(servicePointID):
+    cur = con.cursor()
     meterConfigIDBind = cur.var(str)
 
     plsql_selectMTR_CONFIG_ID = (
         'begin'
         'select MTR_CONFIG_ID into :meterConfigIDBind'
-        'from HS_CI_SP where SP_ID = :servicePointIDBind2'
+        'from HS_CI_SP where SP_ID = :servicePointIDBind'
         'end'
     )
 
     cur.execute(plsql_selectMTR_CONFIG_ID, meterConfigIDBind=meterConfigIDBind,
-                servicePointIDBind2=servicePointID)
+                servicePointIDBind=servicePointID)
 
     meterConfigID = meterConfigIDBind.getValue()
+
+    cur.close()
+
+    return meterConfigID
 
     # Experimental join statement
     # sql_join = """
@@ -165,10 +187,6 @@ def getMeter(account):  # Split into three methods—getSA, getSP, getMeter
 
     # cur.execute(sql_join, account = account)
     # meterConfigID = cur.fetchall()
-
-    cur.close()
-
-    return meterConfigID
 
 
 def getGasUsage(meterConfigID, startDate):
@@ -186,8 +204,6 @@ def getGasUsage(meterConfigID, startDate):
     cur.execute(plsql_retrieveInitialRead,
                 InitialReadBind=InitialReadBind, startDate=startDate)
 
-    # May need to do something with READ_TYPE_FLG
-
     initialReading = InitialReadBind.getValue()
 
     FinalReadBind = cur.var(int)
@@ -200,7 +216,6 @@ def getGasUsage(meterConfigID, startDate):
         'end'
     )
 
-    # What is the endDate? It's not today's date I think
     cur.execute(plsql_retrieveFinalRead,
                 FinalReadBind=FinalReadBind, startDate=startDate)
 

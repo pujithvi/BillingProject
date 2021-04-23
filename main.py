@@ -11,7 +11,9 @@ for account in accountsToProcess:
     billEndDates = retrieveBillHistory(account)
     mostRecentDate = findMostRecentBill(billEndDates)
     startDate = createStartDate(mostRecentDate, account)
-    meter = getMeter(account)
+    serviceAgreement = getSA(account)
+    servicePoint = getSP(serviceAgreement)
+    meter = getMeter(servicePoint)
     gasUsage = getGasUsage(meter, startDate)
 
 
