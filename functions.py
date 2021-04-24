@@ -230,6 +230,8 @@ def convertToTherms(usage):
     return usage / 1.037
 
 
+# Method for billing
+# May need to split up into multiple methods
 def getTotalCost(account, usage):
     cur = con.cursor()
     SARateScheduleCode = cur.var(str)
