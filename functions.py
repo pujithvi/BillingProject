@@ -275,8 +275,32 @@ def getTotalCost(account, usage):
         cur.execute(pl_sql_retrieveBillingRate,
                     stepRate=stepRate, RSCode=RSCode)
 
-        UsageCost = usage * stepRate
+        usageCost = usage * stepRate
 
     elif 'COM' in SARateScheduleCode:
+        stepRate = cur.var(int)
+        lowerLimit = cur.var(int)
+        upperLimit = cur.var(int)
+        usageCost = 0
+        seqNo = 1
 
-    return UsageCost + AGLCharge
+        while upperLimit != 99999999.99:
+            pl_sql_retrieveBillingRate = (
+                'begin'
+                'select STEP_RATE, STEP_LOW_LMT, STEP_HIGH_LMT into :stepRate, :lowerLimit, :upperLimit'
+                'from HS_CI_RS where RS_CD = :RSCode and HEADER_SEQ = 2 and SEQ_NO = :seqNo'
+                'end'
+            )
+
+            cur.execute(pl_sql_retrieveBillingRate, stepRate=stepRate, lowerLimit=lowerLimit, upperLimit=upperLimit RSCode=RSCode, seqNo=seqNo)
+
+            if usage < upperLimit-lowerLimit:
+                usageCost += usage * stepRate
+                break
+
+            else:
+                usageCost += upperLimit-lowerLimit * stepRate
+
+            usage = usage - upperLimit
+
+    return usageCost + AGLCharge
