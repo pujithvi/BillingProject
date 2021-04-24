@@ -224,3 +224,57 @@ def getGasUsage(meterConfigID, startDate):
     cur.close()
 
     return finalReading - initialReading
+
+
+def convertToTherms(usage):
+    return usage / 1.037
+
+
+def getTotalCost(account, usage):
+    cur = con.cursor()
+    SARateScheduleCode = cur.var(str)
+
+    serviceAgreementID = getSA(account)
+
+    pl_sql_retrieveSARateScheduleCode = (
+        'begin'
+        'select RS_CD into :SARateScheduleCode'
+        'from HS_CI_SA where SA_ID = :serviceAgreementID'
+        'end'
+    )
+
+    cur.execute(pl_sql_retrieveSARateScheduleCode,
+                SARateScheduleCode=SARateScheduleCode, serviceAgreementID=serviceAgreementID)
+
+    AGLCharge = cur.var(int)
+    RSCode = cur.var(str)
+
+    pl_sql_retrieveRSCodeandAGLCharge = (
+        'begin'
+        'select FIXED_CHG, RS_CD into :AGLCharge, :RSCode'
+        'from HS_CI_RS where :SARateScheduleCode in SA_TYPE_CD and HEADER_SEQ = 1 and SEQ_NO = 1'
+        'end'
+    )
+
+    cur.execute(pl_sql_retrieveRSCodeandAGLCharge, AGLCharge=AGLCharge,
+                RSCode=RSCode, SARateScheduleCode=SARateScheduleCode)
+
+    if 'RES' in SARateScheduleCode:
+
+        stepRate = cur.var(int)
+
+        pl_sql_retrieveBillingRate = (
+            'begin'
+            'select STEP_RATE into :stepRate'
+            'from HS_CI_RS where RS_CD = :RSCode and HEADER_SEQ = 2'
+            'end'
+        )
+
+        cur.execute(pl_sql_retrieveBillingRate,
+                    stepRate=stepRate, RSCode=RSCode)
+
+        UsageCost = usage * stepRate
+
+    elif 'COM' in SARateScheduleCode:
+
+    return UsageCost + AGLCharge

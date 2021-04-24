@@ -14,7 +14,8 @@ for account in accountsToProcess:
     serviceAgreement = getSA(account)
     servicePoint = getSP(serviceAgreement)
     meter = getMeter(servicePoint)
-    gasUsage = getGasUsage(meter, startDate)
+    gasUsage = convertToTherms(getGasUsage(meter, startDate))
+    totalCost = getTotalCost(account, gasUsage)
 
 
 print(startDate)
