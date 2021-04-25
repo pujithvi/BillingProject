@@ -8,8 +8,8 @@ accountsToProcess = getAccountsToProcess(cycCode)
 print(accountsToProcess)
 
 for account in accountsToProcess:
-    billEndDates = retrieveBillHistory(account)
-    mostRecentDate = findMostRecentBill(billEndDates)
+    billEndDates = retrieveBillEndDates(account)
+    mostRecentDate = findMostRecentEndDate(billEndDates)
     startDate = createStartDate(mostRecentDate, account)
     serviceAgreement = getSA(account)
     servicePoint = getSP(serviceAgreement)
