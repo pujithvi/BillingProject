@@ -53,6 +53,7 @@ def retrieveBillEndDates(account):
             select END_DT from HS_CI_BILL where ACCT_ID = :account
             """
 
+    billEndDates = []
     cur.execute(sql_retrieveBillHistory, [account])
     for row in cur:
         billEndDates.append(row)
@@ -248,6 +249,7 @@ def getTotalCost(account, usage):
 
     cur.execute(pl_sql_retrieveAGLCharge,
                 AGLChargeBind=AGLChargeBind, SARateScheduleCode=SARateScheduleCode)
+
     AGLCharge = AGLChargeBind.getValue()
 
     if 'RES' in SARateScheduleCode:
@@ -288,6 +290,7 @@ def getTotalCost(account, usage):
 
             cur.execute(pl_sql_retrieveBillingRate, stepRateBind=stepRateBind,
                         lowerLimitBind=lowerLimitBind, upperLimitBind=upperLimitBind, RSCode=RSCode, seqNo=seqNo)
+
             stepRate = stepRateBind.getValue()
             lowerLimit = lowerLimitBind.getValue()
             upperLimit = upperLimitBind.getValue()
