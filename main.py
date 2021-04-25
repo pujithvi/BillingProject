@@ -2,10 +2,10 @@ from functions import *
 from queryTest import *
 
 cycCode = getCycCode()
-print(cycCode)
+#print(cycCode)
 
 accountsToProcess = getAccountsToProcess(cycCode)
-print(accountsToProcess)
+#print(accountsToProcess)
 
 for account in accountsToProcess:
     billEndDates = retrieveBillEndDates(account)

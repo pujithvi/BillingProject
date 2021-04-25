@@ -79,7 +79,7 @@ def findMostRecentEndDate(billEndDates):
 # Program E - Create a default start date
 def createStartDate(mostRecentDate, account):
     cur = con.cursor()
-    defaultStartDateBind = cur.var(date)
+    defaultStartDateBind = cur.var(datetime)
 
     plsql_retrieveDefaultStartDate = (
         'begin '
@@ -90,6 +90,7 @@ def createStartDate(mostRecentDate, account):
 
     cur.execute(plsql_retrieveDefaultStartDate,
                 defaultStartDateBind=defaultStartDateBind, account=account)
+                
     defaultStartDate = defaultStartDateBind.getValue()
 
     cur.close()
@@ -114,7 +115,7 @@ def getSA(account):
         'begin'
         'select SA_ID into :serviceAgreementIDBind'
         'from HS_CI_SA where ACCT_ID = :account'
-        'end'
+        'end;'
     )
 
     cur.execute(plsql_selectSA_ID,
@@ -135,7 +136,7 @@ def getSP(serviceAgreementID):
         'begin'
         'select SP_ID into :servicePointIDBind'
         'from HS_CI_SA_SP where SA_ID = :serviceAgreementIDBind'
-        'end'
+        'end;'
     )
 
     cur.execute(plsql_selectSP_ID, servicePointIDBind=servicePointIDBind,
@@ -156,7 +157,7 @@ def getMeter(servicePointID):
         'begin'
         'select MTR_CONFIG_ID into :meterConfigIDBind'
         'from HS_CI_SP where SP_ID = :servicePointIDBind'
-        'end'
+        'end;'
     )
 
     cur.execute(plsql_selectMTR_CONFIG_ID, meterConfigIDBind=meterConfigIDBind,
@@ -186,7 +187,7 @@ def getGasUsage(meterConfigID, startDate):
         'select top 1 REG_READING into :InitialReadBind'
         'from HS_CI_MR where MTR_CONFIG_ID = :meterConfigID and READ_DTTM >= :startDate and READ_TYPE_FLG != \'20\''
         'order by READ_DTTM asc'
-        'end'
+        'end;'
     )
 
     cur.execute(plsql_retrieveInitialRead,
@@ -200,7 +201,7 @@ def getGasUsage(meterConfigID, startDate):
         'select top 1 REG_READING into :FinalReadBind'
         'from HS_CI_MR where MTR_CONFIG_ID = :meterConfigID and READ_DTTM >= :startDate and READ_TYPE_FLG != \'20\''
         'order by READ_DTTM desc'
-        'end'
+        'end;'
     )
 
     cur.execute(plsql_retrieveFinalRead,
@@ -232,7 +233,7 @@ def getTotalCost(account, usage):
         'begin'
         'select RS_CD into :SARateScheduleCodeBind'
         'from HS_CI_SA where SA_ID = :serviceAgreementID'
-        'end'
+        'end;'
     )
 
     cur.execute(pl_sql_retrieveSARateScheduleCode,
@@ -245,7 +246,7 @@ def getTotalCost(account, usage):
         'begin'
         'select FIXED_CHG, RS_CD into :AGLChargeBind'
         'from HS_CI_RS where :SARateScheduleCode in SA_TYPE_CD and HEADER_SEQ = 1 and SEQ_NO = 1'
-        'end'
+        'end;'
     )
 
     cur.execute(pl_sql_retrieveAGLCharge,
@@ -261,7 +262,7 @@ def getTotalCost(account, usage):
             'begin'
             'select STEP_RATE into :stepRateBind'
             'from HS_CI_RS where RS_CD = :SARateScheduleCode and HEADER_SEQ = 2'
-            'end'
+            'end;'
         )
 
         cur.execute(pl_sql_retrieveBillingRate,
@@ -286,7 +287,7 @@ def getTotalCost(account, usage):
                 'begin'
                 'select STEP_RATE, STEP_LOW_LMT, STEP_HIGH_LMT into :stepRateBind, :lowerLimitBind, :upperLimitBind'
                 'from HS_CI_RS where RS_CD = :RSCode and HEADER_SEQ = 2 and SEQ_NO = :seqNo'
-                'end'
+                'end;'
             )
 
             cur.execute(pl_sql_retrieveBillingRate, stepRateBind=stepRateBind,
