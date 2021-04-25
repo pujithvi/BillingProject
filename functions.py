@@ -232,6 +232,8 @@ def convertToTherms(usage):
 
 # Method for billing
 # May need to split up into multiple methods
+# Data is incorrect; we need to fix program cause only one RSCode variable is needed
+
 def getTotalCost(account, usage):
     cur = con.cursor()
     SARateScheduleCode = cur.var(str)
@@ -292,7 +294,8 @@ def getTotalCost(account, usage):
                 'end'
             )
 
-            cur.execute(pl_sql_retrieveBillingRate, stepRate=stepRate, lowerLimit=lowerLimit, upperLimit=upperLimit RSCode=RSCode, seqNo=seqNo)
+            cur.execute(pl_sql_retrieveBillingRate, stepRate=stepRate,
+                        lowerLimit=lowerLimit, upperLimit=upperLimit, RSCode=RSCode, seqNo=seqNo)
 
             if usage < upperLimit-lowerLimit:
                 usageCost += usage * stepRate
@@ -302,5 +305,7 @@ def getTotalCost(account, usage):
                 usageCost += upperLimit-lowerLimit * stepRate
 
             usage = usage - upperLimit
+
+            seqNo += 1
 
     return usageCost + AGLCharge
