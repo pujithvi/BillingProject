@@ -9,6 +9,7 @@ print(accountsToProcess)
 
 for account in accountsToProcess:
     billEndDates = retrieveBillEndDates(account)
+    #print(billEndDates)
     mostRecentDate = findMostRecentEndDate(billEndDates)
     startDate = createStartDate(mostRecentDate, account)
     serviceAgreement = getSA(account)

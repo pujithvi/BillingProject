@@ -7,7 +7,6 @@ con = cx_Oracle.connect("cisadm", "cisadm", dsn)
 
 today = date.today()
 
-#test
 # PROGRAM A - Retrieve the current bill cycle
 def getCycCode():
     cur = con.cursor()
@@ -48,6 +47,7 @@ def getAccountsToProcess(cycCode):
 # this program could be replaced with a program that gets the bill history of an account later, and then have a method here to get the end dates
 def retrieveBillEndDates(account):
     cur = con.cursor()
+    #billEndDates = ""
 
     sql_retrieveBillHistory = """
             select END_DT from HS_CI_BILL where ACCT_ID = :account
@@ -68,8 +68,9 @@ def findMostRecentEndDate(billEndDates):
     mostRecentDate = ""
     diff = sys.maxsize
     for endDate in billEndDates:
-        if (today - endDate).days < diff:
-            diff = (today - endDate).days
+        endDate = endDate[0]
+        if (today - endDate.date()).days < diff:
+            diff = (today - endDate.date()).days
             mostRecentDate = endDate
 
     return mostRecentDate
