@@ -79,18 +79,18 @@ def findMostRecentEndDate(billEndDates):
 # Program E - Create a default start date
 def createStartDate(mostRecentDate, account):
     cur = con.cursor()
-    defaultStartDateBind = cur.var(datetime)
+    defaultStartDateBind = cur.var(date)
 
     plsql_retrieveDefaultStartDate = (
         'begin '
-        'select START_DT into :defaultStartDateBind '
+        'select SETUP_DT into :defaultStartDateBind '
         'from HS_CI_ACCT where ACCT_ID = :account '
         'end; '
     )
 
     cur.execute(plsql_retrieveDefaultStartDate,
                 defaultStartDateBind=defaultStartDateBind, account=account)
-                
+
     defaultStartDate = defaultStartDateBind.getValue()
 
     cur.close()
@@ -112,14 +112,15 @@ def getSA(account):
     serviceAgreementIDBind = cur.var(str)
 
     plsql_selectSA_ID = (
-        'begin'
-        'select SA_ID into :serviceAgreementIDBind'
-        'from HS_CI_SA where ACCT_ID = :account'
-        'end;'
+        'begin '
+        'select SA_ID into :serviceAgreementIDBind '
+        'from HS_CI_SA where ACCT_ID = :account '
+        'end; '
     )
 
     cur.execute(plsql_selectSA_ID,
                 serviceAgreementIDBind=serviceAgreementIDBind, account=account)
+
     serviceAgreementID = serviceAgreementIDBind.getValue()
 
     cur.close()
@@ -308,4 +309,5 @@ def getTotalCost(account, usage):
 
             seqNo += 1
 
+    cur.close()
     return usageCost + AGLCharge
