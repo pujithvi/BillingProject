@@ -7,7 +7,7 @@ con = cx_Oracle.connect("cisadm", "cisadm", dsn)
 
 today = date.today()
 
-
+#test
 # PROGRAM A - Retrieve the current bill cycle
 def getCycCode():
     cur = con.cursor()
