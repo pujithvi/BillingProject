@@ -1,0 +1,5 @@
+1) finish bug fixes, find where the data is wrong and email Subra
+2) exception handling: create a log, make all the methods add to the log somehow, create a list of all potential exceptions and handle them in the log. 
+   after a user executes main.py, they should have a log for each user.
+3) make a function that creates a txt file for the bill and outputs it.
+4) modularization
