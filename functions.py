@@ -84,14 +84,14 @@ def createStartDate(mostRecentDate, account):
     plsql_retrieveDefaultStartDate = (
         'begin '
         'select SETUP_DT into :defaultStartDateBind '
-        'from HS_CI_ACCT where ACCT_ID = :account '
+        'from HS_CI_ACCT where ACCT_ID = :account; '
         'end; '
-    )
+        )
 
     cur.execute(plsql_retrieveDefaultStartDate,
                 defaultStartDateBind=defaultStartDateBind, account=account)
 
-    defaultStartDate = defaultStartDateBind.getValue()
+    defaultStartDate = defaultStartDateBind.getvalue()
 
     cur.close()
 
@@ -114,14 +114,13 @@ def getSA(account):
     plsql_selectSA_ID = (
         'begin '
         'select SA_ID into :serviceAgreementIDBind '
-        'from HS_CI_SA where ACCT_ID = :account '
-        'end; '
-    )
+        'from HS_CI_SA where ACCT_ID = :account; '
+        'end; ')
 
     cur.execute(plsql_selectSA_ID,
                 serviceAgreementIDBind=serviceAgreementIDBind, account=account)
 
-    serviceAgreementID = serviceAgreementIDBind.getValue()
+    serviceAgreementID = serviceAgreementIDBind.getvalue()
 
     cur.close()
 
@@ -134,15 +133,16 @@ def getSP(serviceAgreementID):
     servicePointIDBind = cur.var(str)
 
     plsql_selectSP_ID = (
-        'begin'
-        'select SP_ID into :servicePointIDBind'
-        'from HS_CI_SA_SP where SA_ID = :serviceAgreementIDBind'
-        'end;'
+        'begin '
+        'select SP_ID into :servicePointIDBind '
+        'from HS_CI_SA_SP where SA_ID = :serviceAgreementIDBind; '
+        'end; '
     )
 
     cur.execute(plsql_selectSP_ID, servicePointIDBind=servicePointIDBind,
                 serviceAgreementIDBind=serviceAgreementID)
-    servicePointID = servicePointIDBind.getValue()
+
+    servicePointID = servicePointIDBind.getvalue()
 
     cur.close()
 
@@ -155,15 +155,15 @@ def getMeter(servicePointID):
     meterConfigIDBind = cur.var(str)
 
     plsql_selectMTR_CONFIG_ID = (
-        'begin'
-        'select MTR_CONFIG_ID into :meterConfigIDBind'
-        'from HS_CI_SP where SP_ID = :servicePointIDBind'
-        'end;'
+        'begin '
+        'select MTR_CONFIG_ID into :meterConfigIDBind '
+        'from HS_CI_SP where SP_ID = :servicePointIDBind; '
+        'end; '
     )
 
     cur.execute(plsql_selectMTR_CONFIG_ID, meterConfigIDBind=meterConfigIDBind,
                 servicePointIDBind=servicePointID)
-    meterConfigID = meterConfigIDBind.getValue()
+    meterConfigID = meterConfigIDBind.getvalue()
 
     cur.close()
 
@@ -184,30 +184,30 @@ def getGasUsage(meterConfigID, startDate):
     InitialReadBind = cur.var(int)
 
     plsql_retrieveInitialRead = (
-        'begin'
-        'select top 1 REG_READING into :InitialReadBind'
-        'from HS_CI_MR where MTR_CONFIG_ID = :meterConfigID and READ_DTTM >= :startDate and READ_TYPE_FLG != \'20\''
-        'order by READ_DTTM asc'
-        'end;'
+        'begin '
+        'select top 1 REG_READING into :InitialReadBind '
+        'from HS_CI_MR where MTR_CONFIG_ID = :meterConfigID and READ_DTTM >= :startDate and READ_TYPE_FLG != \'20\' '
+        'order by READ_DTTM asc; '
+        'end; '
     )
 
     cur.execute(plsql_retrieveInitialRead,
                 InitialReadBind=InitialReadBind, meterConfigID=meterConfigID, startDate=startDate)
-    initialReading = InitialReadBind.getValue()
+    initialReading = InitialReadBind.getvalue()
 
     FinalReadBind = cur.var(int)
 
     plsql_retrieveFinalRead = (
-        'begin'
-        'select top 1 REG_READING into :FinalReadBind'
-        'from HS_CI_MR where MTR_CONFIG_ID = :meterConfigID and READ_DTTM >= :startDate and READ_TYPE_FLG != \'20\''
-        'order by READ_DTTM desc'
-        'end;'
+        'begin '
+        'select top 1 REG_READING into :FinalReadBind '
+        'from HS_CI_MR where MTR_CONFIG_ID = :meterConfigID and READ_DTTM >= :startDate and READ_TYPE_FLG != \'20\'; '
+        'order by READ_DTTM desc '
+        'end; '
     )
 
     cur.execute(plsql_retrieveFinalRead,
                 FinalReadBind=FinalReadBind, meterConfigID=meterConfigID, startDate=startDate)
-    finalReading = FinalReadBind.getValue()
+    finalReading = FinalReadBind.getvalue()
 
     cur.close()
 
@@ -231,44 +231,44 @@ def getTotalCost(account, usage):
     serviceAgreementID = getSA(account)
 
     pl_sql_retrieveSARateScheduleCode = (
-        'begin'
-        'select RS_CD into :SARateScheduleCodeBind'
-        'from HS_CI_SA where SA_ID = :serviceAgreementID'
-        'end;'
+        'begin '
+        'select RS_CD into :SARateScheduleCodeBind '
+        'from HS_CI_SA where SA_ID = :serviceAgreementID; '
+        'end; '
     )
 
     cur.execute(pl_sql_retrieveSARateScheduleCode,
                 SARateScheduleCodeBind=SARateScheduleCodeBind, serviceAgreementID=serviceAgreementID)
-    SARateScheduleCode = SARateScheduleCodeBind.getValue()
+    SARateScheduleCode = SARateScheduleCodeBind.getvalue()
 
     AGLChargeBind = cur.var(int)
 
     pl_sql_retrieveAGLCharge = (
-        'begin'
-        'select FIXED_CHG, RS_CD into :AGLChargeBind'
-        'from HS_CI_RS where :SARateScheduleCode in SA_TYPE_CD and HEADER_SEQ = 1 and SEQ_NO = 1'
-        'end;'
+        'begin '
+        'select FIXED_CHG, RS_CD into :AGLChargeBind '
+        'from HS_CI_RS where :SARateScheduleCode in SA_TYPE_CD and HEADER_SEQ = 1 and SEQ_NO = 1; '
+        'end; '
     )
 
     cur.execute(pl_sql_retrieveAGLCharge,
                 AGLChargeBind=AGLChargeBind, SARateScheduleCode=SARateScheduleCode)
 
-    AGLCharge = AGLChargeBind.getValue()
+    AGLCharge = AGLChargeBind.getvalue()
 
     if 'RES' in SARateScheduleCode:
 
         stepRateBind = cur.var(int)
 
         pl_sql_retrieveBillingRate = (
-            'begin'
-            'select STEP_RATE into :stepRateBind'
-            'from HS_CI_RS where RS_CD = :SARateScheduleCode and HEADER_SEQ = 2'
-            'end;'
+            'begin '
+            'select STEP_RATE into :stepRateBind '
+            'from HS_CI_RS where RS_CD = :SARateScheduleCode and HEADER_SEQ = 2; '
+            'end; '
         )
 
         cur.execute(pl_sql_retrieveBillingRate,
                     stepRateBind=stepRateBind, SARateScheduleCode=SARateScheduleCode)
-        stepRate = stepRateBind.getValue()
+        stepRate = stepRateBind.getvalue()
 
         usageCost = usage * stepRate
 
@@ -285,18 +285,18 @@ def getTotalCost(account, usage):
             # might be better to have this query outside the while loop and include some different logic
             # as that would reduce round trips
             pl_sql_retrieveBillingRate = (
-                'begin'
-                'select STEP_RATE, STEP_LOW_LMT, STEP_HIGH_LMT into :stepRateBind, :lowerLimitBind, :upperLimitBind'
-                'from HS_CI_RS where RS_CD = :RSCode and HEADER_SEQ = 2 and SEQ_NO = :seqNo'
-                'end;'
+                'begin '
+                'select STEP_RATE, STEP_LOW_LMT, STEP_HIGH_LMT into :stepRateBind, :lowerLimitBind, :upperLimitBind '
+                'from HS_CI_RS where RS_CD = :RSCode and HEADER_SEQ = 2 and SEQ_NO = :seqNo; '
+                'end; '
             )
 
             cur.execute(pl_sql_retrieveBillingRate, stepRateBind=stepRateBind,
                         lowerLimitBind=lowerLimitBind, upperLimitBind=upperLimitBind, RSCode=RSCode, seqNo=seqNo)
 
-            stepRate = stepRateBind.getValue()
-            lowerLimit = lowerLimitBind.getValue()
-            upperLimit = upperLimitBind.getValue()
+            stepRate = stepRateBind.getvalue()
+            lowerLimit = lowerLimitBind.getvalue()
+            upperLimit = upperLimitBind.getvalue()
 
             if usage < upperLimit-lowerLimit:
                 usageCost += usage * stepRate

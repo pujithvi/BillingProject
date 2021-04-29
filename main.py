@@ -5,7 +5,7 @@ cycCode = getCycCode()
 #print(cycCode)
 
 accountsToProcess = getAccountsToProcess(cycCode)
-print(accountsToProcess)
+#print(accountsToProcess)
 
 for account in accountsToProcess:
     billEndDates = retrieveBillEndDates(account)
@@ -13,7 +13,9 @@ for account in accountsToProcess:
     mostRecentDate = findMostRecentEndDate(billEndDates)
     startDate = createStartDate(mostRecentDate, account)
     serviceAgreement = getSA(account)
+    #print(serviceAgreement)
     servicePoint = getSP(serviceAgreement)
+    #print(servicePoint)
     meter = getMeter(servicePoint)
     gasUsage = convertToTherms(getGasUsage(meter, startDate))
     totalCost = getTotalCost(account, gasUsage)
