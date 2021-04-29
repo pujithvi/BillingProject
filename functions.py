@@ -183,19 +183,32 @@ def getGasUsage(meterConfigID, startDate):
 
     InitialReadBind = cur.var(int)
 
+    sql_retrieveInitialRead = """select REG_READING from HS_CI_MR where MTR_CONFIG_ID = :meterConfigID and READ_DTTM >= :startDate and READ_TYPE_FLG != \'20\' order by READ_DTTM asc """
+
+    cur.execute(sql_retrieveInitialRead,meterConfigID=meterConfigID, startDate=startDate)
+    initialReading = cur.fetchall()
+    #print(initialRead)
+
     plsql_retrieveInitialRead = (
         'begin '
-        'select top 1 REG_READING into :InitialReadBind '
-        'from HS_CI_MR where MTR_CONFIG_ID = :meterConfigID and READ_DTTM >= :startDate and READ_TYPE_FLG != \'20\' '
+        'select REG_READING '
+        'into :InitialReadBind '
+        'from HS_CI_MR '
+        'where MTR_CONFIG_ID = :meterConfigID '
+        'and READ_TYPE_FLG != \'20\' '
         'order by READ_DTTM asc; '
-        'end; '
-    )
+        'end; ')
 
-    cur.execute(plsql_retrieveInitialRead,
-                InitialReadBind=InitialReadBind, meterConfigID=meterConfigID, startDate=startDate)
-    initialReading = InitialReadBind.getvalue()
+    #cur.execute(plsql_retrieveInitialRead,
+                #InitialReadBind=InitialReadBind, meterConfigID=meterConfigID)
+    #initialReading = InitialReadBind.getvalue()
 
     FinalReadBind = cur.var(int)
+
+    sql_retrieveInitialRead = """select REG_READING from HS_CI_MR where MTR_CONFIG_ID = :meterConfigID and READ_DTTM >= :startDate and READ_TYPE_FLG != \'20\' order by READ_DTTM desc """
+
+    cur.execute(sql_retrieveInitialRead,meterConfigID=meterConfigID, startDate=startDate)
+    finalReading = cur.fetchone()
 
     plsql_retrieveFinalRead = (
         'begin '
@@ -205,9 +218,9 @@ def getGasUsage(meterConfigID, startDate):
         'end; '
     )
 
-    cur.execute(plsql_retrieveFinalRead,
-                FinalReadBind=FinalReadBind, meterConfigID=meterConfigID, startDate=startDate)
-    finalReading = FinalReadBind.getvalue()
+    #cur.execute(plsql_retrieveFinalRead,
+                #FinalReadBind=FinalReadBind, meterConfigID=meterConfigID, startDate=startDate)
+    #finalReading = FinalReadBind.getvalue()
 
     cur.close()
 
@@ -245,14 +258,14 @@ def getTotalCost(account, usage):
 
     pl_sql_retrieveAGLCharge = (
         'begin '
-        'select FIXED_CHG, RS_CD into :AGLChargeBind '
+        'select FIXED_CHG into :AGLChargeBind '
         'from HS_CI_RS where :SARateScheduleCode in SA_TYPE_CD and HEADER_SEQ = 1 and SEQ_NO = 1; '
         'end; '
     )
-
+    
     cur.execute(pl_sql_retrieveAGLCharge,
                 AGLChargeBind=AGLChargeBind, SARateScheduleCode=SARateScheduleCode)
-
+    #No data found error
     AGLCharge = AGLChargeBind.getvalue()
 
     if 'RES' in SARateScheduleCode:
