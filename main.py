@@ -23,7 +23,13 @@ for account in accountsToProcess:
     print(meter)
     gasUsage = convertToTherms(getGasUsage(meter, startDate))
     print(gasUsage)
-    totalCost = getTotalCost(account, gasUsage)
+
+    rateSchedule = getRateSchedule(account)
+    AGLCharge = getAGLFixedCharge(rateSchedule)
+    usageCharge = calculateGasCharge(rateSchedule, gasUsage)
+
+    totalCost = AGLCharge + usageCharge
+    #totalCost = getTotalCost(account, gasUsage)
     print(totalCost)
 
 
