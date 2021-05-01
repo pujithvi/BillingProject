@@ -24,6 +24,7 @@ for account in accountsToProcess:
     gasUsage = convertToTherms(getGasUsage(meter, startDate))
     print(gasUsage)
     totalCost = getTotalCost(account, gasUsage)
+    print(totalCost)
 
 
 print(startDate)

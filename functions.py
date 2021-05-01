@@ -190,7 +190,7 @@ def getGasUsage(meterConfigID, startDate):
     startDate = startDate.date()
     cur.execute(sql_retrieveInitialRead,meterConfigID=meterConfigID, startDate=startDate)
     initialReading = cur.fetchone()[0]
-    print(initialReading)
+    #print(initialReading)
 
     plsql_retrieveInitialRead = (
         'begin '
@@ -208,12 +208,13 @@ def getGasUsage(meterConfigID, startDate):
 
     FinalReadBind = cur.var(int)
 
-    sql_retrieveInitialRead = """select REG_READING from HS_CI_MR where MTR_CONFIG_ID = :meterConfigID and READ_DTTM >= :startDate and READ_TYPE_FLG != \'20\' order by READ_DTTM desc """
+    sql_retrieveFinalRead = """select REG_READING from HS_CI_MR where MTR_CONFIG_ID = :meterConfigID and READ_DTTM >= :startDate and READ_TYPE_FLG != \'20\' and REG_READING != :initialReading order by READ_DTTM asc """
+    #(temporary) fix for monthly gas usage
 
-    cur.execute(sql_retrieveInitialRead,meterConfigID=meterConfigID, startDate=startDate)
+    cur.execute(sql_retrieveFinalRead,meterConfigID=meterConfigID, startDate=startDate, initialReading=initialReading)
     finalReading = cur.fetchone()[0]
 
-    print(finalReading)
+    #print(finalReading)
 
     plsql_retrieveFinalRead = (
         'begin '
@@ -258,19 +259,21 @@ def getTotalCost(account, usage):
     cur.execute(pl_sql_retrieveSARateScheduleCode,
                 SARateScheduleCodeBind=SARateScheduleCodeBind, serviceAgreementID=serviceAgreementID)
     SARateScheduleCode = SARateScheduleCodeBind.getvalue()
+    print(SARateScheduleCode)
 
     AGLChargeBind = cur.var(int)
 
     pl_sql_retrieveAGLCharge = (
         'begin '
         'select FIXED_CHG into :AGLChargeBind '
-        'from HS_CI_RS where :SARateScheduleCode in SA_TYPE_CD and HEADER_SEQ = 1 and SEQ_NO = 1; '
+        'from HS_CI_RS where RS_CD = :SARateScheduleCode and HEADER_SEQ = 1 and SEQ_NO = 1; '
         'end; '
     )
     
     cur.execute(pl_sql_retrieveAGLCharge,
                 AGLChargeBind=AGLChargeBind, SARateScheduleCode=SARateScheduleCode)
-    #No data found error
+    #No data found error--fixed
+
     AGLCharge = AGLChargeBind.getvalue()
 
     if 'RES' in SARateScheduleCode:
