@@ -185,9 +185,12 @@ def getGasUsage(meterConfigID, startDate):
 
     sql_retrieveInitialRead = """select REG_READING from HS_CI_MR where MTR_CONFIG_ID = :meterConfigID and READ_DTTM >= :startDate and READ_TYPE_FLG != \'20\' order by READ_DTTM asc """
 
+    
+
+    startDate = startDate.date()
     cur.execute(sql_retrieveInitialRead,meterConfigID=meterConfigID, startDate=startDate)
-    initialReading = cur.fetchall()
-    #print(initialRead)
+    initialReading = cur.fetchone()[0]
+    print(initialReading)
 
     plsql_retrieveInitialRead = (
         'begin '
@@ -208,7 +211,9 @@ def getGasUsage(meterConfigID, startDate):
     sql_retrieveInitialRead = """select REG_READING from HS_CI_MR where MTR_CONFIG_ID = :meterConfigID and READ_DTTM >= :startDate and READ_TYPE_FLG != \'20\' order by READ_DTTM desc """
 
     cur.execute(sql_retrieveInitialRead,meterConfigID=meterConfigID, startDate=startDate)
-    finalReading = cur.fetchone()
+    finalReading = cur.fetchone()[0]
+
+    print(finalReading)
 
     plsql_retrieveFinalRead = (
         'begin '
