@@ -22,7 +22,7 @@ for account in accountsToProcess:
     startDate = createStartDate(mostRecentDate, account)
     # print(startDate)
 
-    #Need to do like this for every method
+    # Need to do like this for every method
     try:
         serviceAgreement = getSA(account)
     except Exception as e:

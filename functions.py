@@ -361,9 +361,9 @@ def calculateGasCharge(SARateScheduleCode, usage, dictionary):
     return usageCost
 
 
-#Method you can call to easily log information
+# Method you can call to easily log information
 
-def logger(account, text, method = ""):
+def logger(account, text, method=""):
     logger.counter += 1
     if logger.counter == 1:
         outF = open(account + "Log.txt", 'w')
@@ -371,22 +371,26 @@ def logger(account, text, method = ""):
         outF = open(account + "Log.txt", 'a')
 
     if method != '':
-        print(method + " method:" + '\n', file = outF)
+        print(method + " method:" + '\n', file=outF)
 
-    print(text, file = outF)
+    print(text, file=outF)
     outF.close()
     return
 
-#Method for outputting total bill
-#Premilinary Attempt
+
+# Method for outputting total bill
+# Premilinary Attempt
+
 
 def billOutput(account, gasUsage, AGLCharge, usageCharge):
     outF = open(account + "Bill.txt", 'w')
 
-    print("AGL Fixed Charge: " + str(AGLCharge), file = outF)
-    print('Total Gas Usage (Therms): ' + str(gasUsage), file = outF)
-    print("Gas Usage Charge: " + str(usageCharge), file = outF)
-    print("Total Cost: " + str(AGLCharge + usageCharge), file = outF)
+    print("Account: " + account, file=outF)
+    # Add statement for period (start and end dates)
+    print("AGL Fixed Charge: " + str(AGLCharge), file=outF)
+    print('Total Gas Usage (Therms): ' + str(gasUsage), file=outF)
+    print("Gas Usage Charge: " + str(usageCharge), file=outF)
+    print("Total Cost: " + str(AGLCharge + usageCharge), file=outF)
 
     outF.close()
     return
