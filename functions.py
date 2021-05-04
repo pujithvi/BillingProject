@@ -185,12 +185,14 @@ def getGasUsage(meterConfigID, startDate):
 
     InitialReadBind = cur.var(int)
 
-    sql_retrieveInitialRead = """select REG_READING from HS_CI_MR where MTR_CONFIG_ID = :meterConfigID and READ_DTTM >= :startDate and READ_TYPE_FLG != \'20\' order by READ_DTTM asc """
+    sql_retrieveInitialRead = """select REG_READING, READ_DTTM from HS_CI_MR where MTR_CONFIG_ID = :meterConfigID and READ_DTTM >= :startDate and READ_TYPE_FLG != \'20\' order by READ_DTTM asc """
 
     startDate = startDate.date()
     cur.execute(sql_retrieveInitialRead,
                 meterConfigID=meterConfigID, startDate=startDate)
+
     initialReading = cur.fetchone()[0]
+    initialDate = cur.fetchone()[1]
     # print(initialReading)
 
     plsql_retrieveInitialRead = (
@@ -209,12 +211,13 @@ def getGasUsage(meterConfigID, startDate):
 
     FinalReadBind = cur.var(int)
 
-    sql_retrieveFinalRead = """select REG_READING from HS_CI_MR where MTR_CONFIG_ID = :meterConfigID and READ_DTTM >= :startDate and READ_TYPE_FLG != \'20\' and REG_READING != :initialReading order by READ_DTTM asc """
+    sql_retrieveFinalRead = """select REG_READING, READ_DTTM from HS_CI_MR where MTR_CONFIG_ID = :meterConfigID and READ_DTTM >= :startDate and READ_TYPE_FLG != \'20\' and REG_READING != :initialReading order by READ_DTTM asc """
     # (temporary) fix for monthly gas usage
 
     cur.execute(sql_retrieveFinalRead, meterConfigID=meterConfigID,
                 startDate=startDate, initialReading=initialReading)
     finalReading = cur.fetchone()[0]
+    finalDate = cur.fetchone()[1]
 
     # print(finalReading)
 
@@ -232,7 +235,7 @@ def getGasUsage(meterConfigID, startDate):
 
     cur.close()
 
-    return finalReading - initialReading
+    return [initialDate, finalDate, finalReading - initialReading]
 
 
 def convertToTherms(usage):
@@ -363,17 +366,16 @@ def calculateGasCharge(SARateScheduleCode, usage, dictionary):
 
 # Method you can call to easily log information
 
-def logger(account, text, method=""):
-    logger.counter += 1
-    if logger.counter == 1:
-        outF = open(account + "Log.txt", 'w')
-    else:
-        outF = open(account + "Log.txt", 'a')
-
+def logger(account, text = '', method="", successful = False):
+    outF = open(account + "Log.txt", 'a')
     if method != '':
         print(method + " method:" + '\n', file=outF)
-
-    print(text, file=outF)
+    if successful:
+        print('\t' + method + ' ran successfully.' + '\n', file = outF)
+    if text != '':
+        text = text.split('\n')
+        for line in text:
+            print('\t' + line, file=outF)
     outF.close()
     return
 
@@ -382,11 +384,11 @@ def logger(account, text, method=""):
 # Premilinary Attempt
 
 
-def billOutput(account, gasUsage, AGLCharge, usageCharge):
+def billOutput(account, initialDate, finalDate, gasUsage, AGLCharge, usageCharge):
     outF = open(account + "Bill.txt", 'w')
 
     print("Account: " + account, file=outF)
-    # Add statement for period (start and end dates)
+    print("Billing Period: " + str(initialDate).split(' ')[0] + ' to ' + str(finalDate).split(' ')[0], file = outF)
     print("AGL Fixed Charge: " + str(AGLCharge), file=outF)
     print('Total Gas Usage (Therms): ' + str(gasUsage), file=outF)
     print("Gas Usage Charge: " + str(usageCharge), file=outF)

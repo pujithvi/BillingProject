@@ -1,8 +1,15 @@
 from functions import *
 from queryTest import *
 import datetime
+import os
 
-logger.counter = 0
+directory = os.getcwd()
+for file in os.scandir(directory):
+    if (file.path.endswith('Log.txt') and file.is_file()):
+        logFile = open(file.path, 'r+')
+        logFile.truncate(0)
+        logFile.close()
+
 AGLCharge_dictionary = {}
 Rate_dictionary = {}
 
@@ -15,14 +22,21 @@ print(accountsToProcess)
 for account in accountsToProcess:
 
     print(account)
-    billEndDates = retrieveBillEndDates(account)
+
+        # Need to do like this for every method
+    try:
+        billEndDates = retrieveBillEndDates(account)
+        logger(account, method = 'retrieveBillEndDates', successful=True)
+    except Exception as e:
+        logger(account, str(e), 'retrieveBillEndDates')
+   
     # print(billEndDates)
     mostRecentDate = findMostRecentEndDate(billEndDates)
     # print(mostRecentDate)
     startDate = createStartDate(mostRecentDate, account)
     # print(startDate)
 
-    # Need to do like this for every method
+
     try:
         serviceAgreement = getSA(account)
     except Exception as e:
@@ -35,7 +49,8 @@ for account in accountsToProcess:
     # print(servicePoint)
     meter = getMeter(servicePoint)
     # print(meter)
-    gasUsage = convertToTherms(getGasUsage(meter, startDate))
+    initialDate, finalDate, gasUsage = getGasUsage(meter, startDate)
+    gasUsage = convertToTherms(gasUsage)
     # print(gasUsage)
 
     rateSchedule = getRateSchedule(account)
@@ -46,9 +61,9 @@ for account in accountsToProcess:
     # print(usageCharge)
 
     totalCost = AGLCharge + usageCharge
-    #totalCost = getTotalCost(account, gasUsage)
+ 
     print(totalCost)
-    billOutput(account, gasUsage, AGLCharge, usageCharge)
+    billOutput(account, initialDate, finalDate, gasUsage, AGLCharge, usageCharge)
 
 
 print(startDate)
