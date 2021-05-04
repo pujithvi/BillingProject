@@ -361,6 +361,22 @@ def calculateGasCharge(SARateScheduleCode, usage, dictionary):
     return usageCost
 
 
+#Method you can call to easily log information
+
+def logger(account, text, method = ""):
+    logger.counter += 1
+    if logger.counter == 1:
+        outF = open(account + "Log.txt", 'w')
+    else:
+        outF = open(account + "Log.txt", 'a')
+
+    if method != '':
+        print(method + " method:" + '\n', file = outF)
+
+    print(text, file = outF)
+    outF.close()
+    return
+
 #Method for outputting total bill
 #Premilinary Attempt
 
@@ -371,6 +387,6 @@ def billOutput(account, gasUsage, AGLCharge, usageCharge):
     print('Total Gas Usage (Therms): ' + str(gasUsage), file = outF)
     print("Gas Usage Charge: " + str(usageCharge), file = outF)
     print("Total Cost: " + str(AGLCharge + usageCharge), file = outF)
-     
+
     outF.close()
     return

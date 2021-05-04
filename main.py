@@ -2,8 +2,10 @@ from functions import *
 from queryTest import *
 import datetime
 
+logger.counter = 0
 AGLCharge_dictionary = {}
 Rate_dictionary = {}
+
 cycCode = getCycCode()
 # print(cycCode)
 
@@ -19,10 +21,13 @@ for account in accountsToProcess:
     # print(mostRecentDate)
     startDate = createStartDate(mostRecentDate, account)
     # print(startDate)
+
+    #Need to do like this for every method
     try:
         serviceAgreement = getSA(account)
-    except:
+    except Exception as e:
         print('No service agreement for account ' + account)
+        logger(account, str(e), 'getSA')
         continue
 
     # print(serviceAgreement)
