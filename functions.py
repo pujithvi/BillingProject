@@ -359,3 +359,18 @@ def calculateGasCharge(SARateScheduleCode, usage, dictionary):
 
     cur.close()
     return usageCost
+
+
+#Method for outputting total bill
+#Premilinary Attempt
+
+def billOutput(account, gasUsage, AGLCharge, usageCharge):
+    outF = open(account + "Bill.txt", 'w')
+
+    print("AGL Fixed Charge: " + str(AGLCharge), file = outF)
+    print('Total Gas Usage (Therms): ' + str(gasUsage), file = outF)
+    print("Gas Usage Charge: " + str(usageCharge), file = outF)
+    print("Total Cost: " + str(AGLCharge + usageCharge), file = outF)
+     
+    outF.close()
+    return

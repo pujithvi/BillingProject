@@ -43,6 +43,7 @@ for account in accountsToProcess:
     totalCost = AGLCharge + usageCharge
     #totalCost = getTotalCost(account, gasUsage)
     print(totalCost)
+    billOutput(account, gasUsage, AGLCharge, usageCharge)
 
 
 print(startDate)

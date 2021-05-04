@@ -1,0 +1,4 @@
+AGL Fixed Charge: 28.47
+Total Gas Usage (Therms): 22.17936354869817
+Gas Usage Charge: 11.311475409836067
+Total Cost: 39.78147540983606
