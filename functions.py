@@ -268,50 +268,54 @@ def getRateSchedule(account):
 
 
 def getAGLFixedCharge(SARateScheduleCode, dictionary):
-    if SARateScheduleCode in dictionary:
+    try:
         return dictionary[SARateScheduleCode]
+    except KeyError:
 
-    cur = con.cursor()
+        cur = con.cursor()
 
-    AGLChargeBind = cur.var(int)
+        AGLChargeBind = cur.var(int)
 
-    pl_sql_retrieveAGLCharge = (
-        'begin '
-        'select FIXED_CHG into :AGLChargeBind '
-        'from HS_CI_RS where RS_CD = :SARateScheduleCode and HEADER_SEQ = 1 and SEQ_NO = 1; '
-        'end; '
-    )
-
-    cur.execute(pl_sql_retrieveAGLCharge,
-                AGLChargeBind=AGLChargeBind, SARateScheduleCode=SARateScheduleCode)
-    # No data found error--fixed
-
-    AGLCharge = AGLChargeBind.getvalue()
-
-    cur.close()
-
-    dictionary[SARateScheduleCode] = AGLCharge
-
-    return AGLCharge
-
-
-def calculateGasCharge(SARateScheduleCode, usage):
-    cur = con.cursor()
-
-    if 'RES' in SARateScheduleCode:
-
-        stepRateBind = cur.var(int)
-
-        pl_sql_retrieveBillingRate = (
+        pl_sql_retrieveAGLCharge = (
             'begin '
-            'select STEP_RATE into :stepRateBind '
-            'from HS_CI_RS where RS_CD = :SARateScheduleCode and HEADER_SEQ = 2; '
+            'select FIXED_CHG into :AGLChargeBind '
+            'from HS_CI_RS where RS_CD = :SARateScheduleCode and HEADER_SEQ = 1 and SEQ_NO = 1; '
             'end; '
         )
 
-        cur.execute(pl_sql_retrieveBillingRate,
-                    stepRateBind=stepRateBind, SARateScheduleCode=SARateScheduleCode)
-        stepRate = stepRateBind.getvalue()
+        cur.execute(pl_sql_retrieveAGLCharge,
+                    AGLChargeBind=AGLChargeBind, SARateScheduleCode=SARateScheduleCode)
+        # No data found error--fixed
+
+        AGLCharge = AGLChargeBind.getvalue()
+
+        cur.close()
+
+        dictionary[SARateScheduleCode] = AGLCharge
+
+        return AGLCharge
+
+
+def calculateGasCharge(SARateScheduleCode, usage, dictionary):
+    cur = con.cursor()
+
+    if 'RES' in SARateScheduleCode:
+        try:
+            stepRate = dictionary[SARateScheduleCode]
+        except KeyError:
+            stepRateBind = cur.var(int)
+
+            pl_sql_retrieveBillingRate = (
+                'begin '
+                'select STEP_RATE into :stepRateBind '
+                'from HS_CI_RS where RS_CD = :SARateScheduleCode and HEADER_SEQ = 2; '
+                'end; '
+            )
+
+            cur.execute(pl_sql_retrieveBillingRate,
+                        stepRateBind=stepRateBind, SARateScheduleCode=SARateScheduleCode)
+            stepRate = stepRateBind.getvalue()
+            dictionary[SARateScheduleCode] = stepRate
 
         usageCost = usage * stepRate
 

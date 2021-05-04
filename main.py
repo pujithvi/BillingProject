@@ -3,6 +3,7 @@ from queryTest import *
 import datetime
 
 AGLCharge_dictionary = {}
+Rate_dictionary = {}
 cycCode = getCycCode()
 # print(cycCode)
 
@@ -36,7 +37,7 @@ for account in accountsToProcess:
     # print(rateSchedule)
     AGLCharge = getAGLFixedCharge(rateSchedule, AGLCharge_dictionary)
     # print(AGLCharge)
-    usageCharge = calculateGasCharge(rateSchedule, gasUsage)
+    usageCharge = calculateGasCharge(rateSchedule, gasUsage, Rate_dictionary)
     # print(usageCharge)
 
     totalCost = AGLCharge + usageCharge
