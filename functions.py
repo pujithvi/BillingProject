@@ -191,7 +191,7 @@ def getGasUsage(meterConfigID, startDate):
     cur.execute(sql_retrieveInitialRead,
                 meterConfigID=meterConfigID, startDate=startDate)
     initialReading = cur.fetchone()[0]
-    #print(initialReading)
+    # print(initialReading)
 
     plsql_retrieveInitialRead = (
         'begin '
@@ -216,7 +216,7 @@ def getGasUsage(meterConfigID, startDate):
                 startDate=startDate, initialReading=initialReading)
     finalReading = cur.fetchone()[0]
 
-    #print(finalReading)
+    # print(finalReading)
 
     plsql_retrieveFinalRead = (
         'begin '
@@ -267,7 +267,10 @@ def getRateSchedule(account):
     return SARateScheduleCode
 
 
-def getAGLFixedCharge(SARateScheduleCode):
+def getAGLFixedCharge(SARateScheduleCode, dictionary):
+    if SARateScheduleCode in dictionary:
+        return dictionary[SARateScheduleCode]
+
     cur = con.cursor()
 
     AGLChargeBind = cur.var(int)
@@ -286,8 +289,10 @@ def getAGLFixedCharge(SARateScheduleCode):
     AGLCharge = AGLChargeBind.getvalue()
 
     cur.close()
-    return AGLCharge
 
+    dictionary[SARateScheduleCode] = AGLCharge
+
+    return AGLCharge
 
 
 def calculateGasCharge(SARateScheduleCode, usage):
