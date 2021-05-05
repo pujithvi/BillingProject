@@ -6,9 +6,10 @@ import os
 directory = os.getcwd()
 for file in os.scandir(directory):
     if (file.path.endswith('Log.txt') and file.is_file()):
-        logFile = open(file.path, 'r+')
-        logFile.truncate(0)
-        logFile.close()
+        os.remove(file.path)
+        # logFile = open(file.path, 'r+')
+        # logFile.truncate(0)
+        # logFile.close()
 
 AGLCharge_dictionary = {}
 Rate_dictionary = {}
@@ -29,12 +30,13 @@ for account in accountsToProcess:
         logger(account, method = 'retrieveBillEndDates', successful=True)
     except Exception as e:
         logger(account, str(e), 'retrieveBillEndDates')
+        continue
    
     # print(billEndDates)
     mostRecentDate = findMostRecentEndDate(billEndDates)
     # print(mostRecentDate)
     startDate = createStartDate(mostRecentDate, account)
-    # print(startDate)
+    #print('start date:', startDate)
 
 
     try:
@@ -42,13 +44,14 @@ for account in accountsToProcess:
     except Exception as e:
         print('No service agreement for account ' + account)
         logger(account, str(e), 'getSA')
+        billOutput(account = account, fail=True, text = "No service agreement for this account." )
         continue
 
     # print(serviceAgreement)
     servicePoint = getSP(serviceAgreement)
     # print(servicePoint)
     meter = getMeter(servicePoint)
-    # print(meter)
+    #print('meter:', meter)
     initialDate, finalDate, gasUsage = getGasUsage(meter, startDate)
     gasUsage = convertToTherms(gasUsage)
     # print(gasUsage)
@@ -66,4 +69,3 @@ for account in accountsToProcess:
     billOutput(account, initialDate, finalDate, gasUsage, AGLCharge, usageCharge)
 
 
-print(startDate)

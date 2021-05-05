@@ -185,15 +185,13 @@ def getGasUsage(meterConfigID, startDate):
 
     InitialReadBind = cur.var(int)
 
-    sql_retrieveInitialRead = """select REG_READING, READ_DTTM from HS_CI_MR where MTR_CONFIG_ID = :meterConfigID and READ_DTTM >= :startDate and READ_TYPE_FLG != \'20\' order by READ_DTTM asc """
+    sql_retrieveInitialRead = """select REG_READING, READ_DTTM from HS_CI_MR where MTR_CONFIG_ID = :meterConfigID and READ_DTTM >= :startDate and READ_TYPE_FLG != \'20\' and READ_TYPE_FLG != \'30\' order by READ_DTTM asc """
 
     startDate = startDate.date()
     cur.execute(sql_retrieveInitialRead,
                 meterConfigID=meterConfigID, startDate=startDate)
 
-    initialReading = cur.fetchone()[0]
-    initialDate = cur.fetchone()[1]
-    # print(initialReading)
+    initialReading, initialDate = cur.fetchone()
 
     plsql_retrieveInitialRead = (
         'begin '
@@ -211,15 +209,15 @@ def getGasUsage(meterConfigID, startDate):
 
     FinalReadBind = cur.var(int)
 
-    sql_retrieveFinalRead = """select REG_READING, READ_DTTM from HS_CI_MR where MTR_CONFIG_ID = :meterConfigID and READ_DTTM >= :startDate and READ_TYPE_FLG != \'20\' and REG_READING != :initialReading order by READ_DTTM asc """
+    sql_retrieveFinalRead = """select REG_READING, READ_DTTM from HS_CI_MR where MTR_CONFIG_ID = :meterConfigID and READ_DTTM >= :startDate and READ_TYPE_FLG != \'20\' and READ_TYPE_FLG != \'30\' and REG_READING != :initialReading order by READ_DTTM asc """
     # (temporary) fix for monthly gas usage
 
     cur.execute(sql_retrieveFinalRead, meterConfigID=meterConfigID,
                 startDate=startDate, initialReading=initialReading)
-    finalReading = cur.fetchone()[0]
-    finalDate = cur.fetchone()[1]
 
-    # print(finalReading)
+    finalReading, finalDate = cur.fetchone()
+
+    #print('final reading: ', finalReading)
 
     plsql_retrieveFinalRead = (
         'begin '
@@ -384,15 +382,24 @@ def logger(account, text = '', method="", successful = False):
 # Premilinary Attempt
 
 
-def billOutput(account, initialDate, finalDate, gasUsage, AGLCharge, usageCharge):
-    outF = open(account + "Bill.txt", 'w')
+def billOutput(account='', initialDate='', finalDate='', gasUsage='', AGLCharge='', usageCharge='', fail=False, text = ""):
+    outF = open(account + str(initialDate).split(' ')[0] + "Bill.txt", 'w')
 
-    print("Account: " + account, file=outF)
-    print("Billing Period: " + str(initialDate).split(' ')[0] + ' to ' + str(finalDate).split(' ')[0], file = outF)
-    print("AGL Fixed Charge: " + str(AGLCharge), file=outF)
-    print('Total Gas Usage (Therms): ' + str(gasUsage), file=outF)
-    print("Gas Usage Charge: " + str(usageCharge), file=outF)
-    print("Total Cost: " + str(AGLCharge + usageCharge), file=outF)
+    if account != '':
+        print("Account: " + account, file=outF)
+    if initialDate != '' and finalDate != '':
+        print("Billing Period: " + str(initialDate).split(' ')[0] + ' to ' + str(finalDate).split(' ')[0], file = outF)
+    if AGLCharge != '':
+        print("AGL Fixed Charge: " + str(AGLCharge), file=outF)
+    if gasUsage != '':
+        print('Total Gas Usage (Therms): ' + str(gasUsage), file=outF)
+    if usageCharge != '':
+        print("Gas Usage Charge: " + str(usageCharge), file=outF)
+    if AGLCharge != '' and usageCharge != '':
+        print("Total Cost: " + str(AGLCharge + usageCharge), file=outF)
+
+    if fail:
+        print(text, file=outF)
 
     outF.close()
     return
