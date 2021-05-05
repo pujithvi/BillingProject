@@ -1,5 +1,6 @@
 import sys
 import cx_Oracle
+import os
 from datetime import date, timedelta
 
 dsn = cx_Oracle.makedsn(host='localhost', port=1521, sid='orcl')
@@ -185,11 +186,11 @@ def getGasUsage(meterConfigID, startDate):
 
     InitialReadBind = cur.var(int)
 
-    sql_retrieveInitialRead = """select REG_READING, READ_DTTM from HS_CI_MR where MTR_CONFIG_ID = :meterConfigID and READ_DTTM >= :startDate and READ_TYPE_FLG != \'20\' and READ_TYPE_FLG != \'30\' order by READ_DTTM asc """
+    sql_retrieveInitialRead = """select REG_READING, READ_DTTM from HS_CI_MR where MTR_CONFIG_ID = :meterConfigID and READ_TYPE_FLG != \'20\' and READ_TYPE_FLG != \'30\' order by READ_DTTM asc """
 
     startDate = startDate.date()
     cur.execute(sql_retrieveInitialRead,
-                meterConfigID=meterConfigID, startDate=startDate)
+                meterConfigID=meterConfigID)
 
     initialReading, initialDate = cur.fetchone()
 
@@ -205,15 +206,15 @@ def getGasUsage(meterConfigID, startDate):
 
     # cur.execute(plsql_retrieveInitialRead,
     # InitialReadBind=InitialReadBind, meterConfigID=meterConfigID)
-    #initialReading = InitialReadBind.getvalue()
+    # initialReading = InitialReadBind.getvalue()
 
     FinalReadBind = cur.var(int)
 
-    sql_retrieveFinalRead = """select REG_READING, READ_DTTM from HS_CI_MR where MTR_CONFIG_ID = :meterConfigID and READ_DTTM >= :startDate and READ_TYPE_FLG != \'20\' and READ_TYPE_FLG != \'30\' and REG_READING != :initialReading order by READ_DTTM asc """
+    sql_retrieveFinalRead = """select REG_READING, READ_DTTM from HS_CI_MR where MTR_CONFIG_ID = :meterConfigID and READ_TYPE_FLG != \'20\' and READ_TYPE_FLG != \'30\' and REG_READING != :initialReading order by READ_DTTM asc """
     # (temporary) fix for monthly gas usage
 
     cur.execute(sql_retrieveFinalRead, meterConfigID=meterConfigID,
-                startDate=startDate, initialReading=initialReading)
+                initialReading=initialReading)
 
     finalReading, finalDate = cur.fetchone()
 
@@ -362,44 +363,26 @@ def calculateGasCharge(SARateScheduleCode, usage, dictionary):
     return usageCost
 
 
-# Method you can call to easily log information
-
-def logger(account, text = '', method="", successful = False):
-    outF = open(account + "Log.txt", 'a')
-    if method != '':
-        print(method + " method:" + '\n', file=outF)
-    if successful:
-        print('\t' + method + ' ran successfully.' + '\n', file = outF)
-    if text != '':
-        text = text.split('\n')
-        for line in text:
-            print('\t' + line, file=outF)
-    outF.close()
-    return
-
-
 # Method for outputting total bill
-# Premilinary Attempt
+# Preliminary Attempt
+def billOutput(account='', initialDate='', finalDate='', gasUsage='', AGLCharge='', usageCharge='', fail=False, text = "", path=""):
+    os.chdir(path)
 
+    with open(account + str(initialDate).split(' ')[0] + "Bill.txt", 'w') as file:
+        if account != '':
+            print("Account: " + account, file=file)
+        if initialDate != '' and finalDate != '':
+            print("Billing Period: " + str(initialDate).split(' ')[0] + ' to ' + str(finalDate).split(' ')[0], file=file)
+        if AGLCharge != '':
+            print("AGL Fixed Charge: " + str(AGLCharge), file=file)
+        if gasUsage != '':
+            print('Total Gas Usage (Therms): ' + str(gasUsage), file=file)
+        if usageCharge != '':
+            print("Gas Usage Charge: " + str(usageCharge), file=file)
+        if AGLCharge != '' and usageCharge != '':
+            print("Total Cost: " + str(AGLCharge + usageCharge), file=file)
 
-def billOutput(account='', initialDate='', finalDate='', gasUsage='', AGLCharge='', usageCharge='', fail=False, text = ""):
-    outF = open(account + str(initialDate).split(' ')[0] + "Bill.txt", 'w')
+        #
+        if fail:
+            print(text, file=file)
 
-    if account != '':
-        print("Account: " + account, file=outF)
-    if initialDate != '' and finalDate != '':
-        print("Billing Period: " + str(initialDate).split(' ')[0] + ' to ' + str(finalDate).split(' ')[0], file = outF)
-    if AGLCharge != '':
-        print("AGL Fixed Charge: " + str(AGLCharge), file=outF)
-    if gasUsage != '':
-        print('Total Gas Usage (Therms): ' + str(gasUsage), file=outF)
-    if usageCharge != '':
-        print("Gas Usage Charge: " + str(usageCharge), file=outF)
-    if AGLCharge != '' and usageCharge != '':
-        print("Total Cost: " + str(AGLCharge + usageCharge), file=outF)
-
-    if fail:
-        print(text, file=outF)
-
-    outF.close()
-    return
