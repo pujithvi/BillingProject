@@ -1,0 +1,11 @@
+2021-05-05 18:24:14,043 : act719pit6Log : INFO - <function retrieveBillEndDates at 0x0000020AB1AE9790> method ran successfully.
+2021-05-05 18:24:14,044 : act719pit6Log : INFO - <function findMostRecentEndDate at 0x0000020AB1AE9820> method ran successfully.
+2021-05-05 18:24:14,048 : act719pit6Log : INFO - <function createStartDate at 0x0000020AB1AE98B0> method ran successfully.
+2021-05-05 18:24:14,052 : act719pit6Log : INFO - <function getSA at 0x0000020AB1AE9940> method ran successfully.
+2021-05-05 18:24:14,056 : act719pit6Log : INFO - <function getSP at 0x0000020AB1AE99D0> method ran successfully.
+2021-05-05 18:24:14,060 : act719pit6Log : INFO - <function getMeter at 0x0000020AB1AE9A60> method ran successfully.
+2021-05-05 18:24:14,064 : act719pit6Log : INFO - <function getGasUsage at 0x0000020AB1ABC550> method ran successfully.
+2021-05-05 18:24:14,066 : act719pit6Log : INFO - <function convertToTherms at 0x0000020AB1ABC3A0> method ran successfully.
+2021-05-05 18:24:14,071 : act719pit6Log : INFO - <function getRateSchedule at 0x0000020AB1ABC280> method ran successfully.
+2021-05-05 18:24:14,073 : act719pit6Log : INFO - <function getAGLFixedCharge at 0x0000020AB1ABC940> method ran successfully.
+2021-05-05 18:24:14,074 : act719pit6Log : INFO - <function calculateGasCharge at 0x0000020AB1ABC5E0> method ran successfully.

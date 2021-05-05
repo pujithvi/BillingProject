@@ -364,32 +364,6 @@ def calculateGasCharge(SARateScheduleCode, usage, dictionary):
 
 
 # Method for outputting total bill
-<<<<<<< HEAD
-# Premilinary Attempt
-
-#Could create a bill object and go from there
-def billOutput(account='', initialDate='', finalDate='', gasUsage='', AGLCharge='', usageCharge='', fail=False, text = ""):
-    outF = open(account + str(initialDate).split(' ')[0] + "Bill.txt", 'w')
-
-    if account != '':
-        print("Account: " + account, file=outF)
-    if initialDate != '' and finalDate != '':
-        print("Billing Period: " + str(initialDate).split(' ')[0] + ' to ' + str(finalDate).split(' ')[0], file = outF)
-    if AGLCharge != '':
-        print("AGL Fixed Charge: " + str(AGLCharge), file=outF)
-    if gasUsage != '':
-        print('Total Gas Usage (Therms): ' + str(gasUsage), file=outF)
-    if usageCharge != '':
-        print("Gas Usage Charge: " + str(usageCharge), file=outF)
-    if AGLCharge != '' and usageCharge != '':
-        print("Total Cost: " + str(AGLCharge + usageCharge), file=outF)
-
-    if fail:
-        print(text, file=outF)
-
-    outF.close()
-    return
-=======
 # Preliminary Attempt
 def billOutput(account='', initialDate='', finalDate='', gasUsage='', AGLCharge='', usageCharge='', fail=False, text = "", path=""):
     os.chdir(path)
@@ -411,5 +385,4 @@ def billOutput(account='', initialDate='', finalDate='', gasUsage='', AGLCharge=
         #
         if fail:
             print(text, file=file)
->>>>>>> 015671d0001b35e39ac8084beac6ae4f47baf6b6
 

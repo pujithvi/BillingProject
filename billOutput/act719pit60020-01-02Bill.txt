@@ -1,0 +1,6 @@
+Account: act719pit6
+Billing Period: 0020-01-02 to 0020-03-04
+AGL Fixed Charge: 28.47
+Total Gas Usage (Therms): -8975.89199614272
+Gas Usage Charge: -4757.222757955642
+Total Cost: -4728.752757955642

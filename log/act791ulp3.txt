@@ -1,0 +1,11 @@
+2021-05-05 18:24:14,004 : act791ulp3Log : INFO - <function retrieveBillEndDates at 0x0000020AB1AE9790> method ran successfully.
+2021-05-05 18:24:14,005 : act791ulp3Log : INFO - <function findMostRecentEndDate at 0x0000020AB1AE9820> method ran successfully.
+2021-05-05 18:24:14,008 : act791ulp3Log : INFO - <function createStartDate at 0x0000020AB1AE98B0> method ran successfully.
+2021-05-05 18:24:14,010 : act791ulp3Log : INFO - <function getSA at 0x0000020AB1AE9940> method ran successfully.
+2021-05-05 18:24:14,013 : act791ulp3Log : INFO - <function getSP at 0x0000020AB1AE99D0> method ran successfully.
+2021-05-05 18:24:14,019 : act791ulp3Log : INFO - <function getMeter at 0x0000020AB1AE9A60> method ran successfully.
+2021-05-05 18:24:14,024 : act791ulp3Log : INFO - <function getGasUsage at 0x0000020AB1ABC550> method ran successfully.
+2021-05-05 18:24:14,026 : act791ulp3Log : INFO - <function convertToTherms at 0x0000020AB1ABC3A0> method ran successfully.
+2021-05-05 18:24:14,030 : act791ulp3Log : INFO - <function getRateSchedule at 0x0000020AB1ABC280> method ran successfully.
+2021-05-05 18:24:14,033 : act791ulp3Log : INFO - <function getAGLFixedCharge at 0x0000020AB1ABC940> method ran successfully.
+2021-05-05 18:24:14,037 : act791ulp3Log : INFO - <function calculateGasCharge at 0x0000020AB1ABC5E0> method ran successfully.

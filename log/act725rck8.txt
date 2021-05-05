@@ -1,0 +1,11 @@
+2021-05-05 18:24:13,945 : act725rck8Log : INFO - <function retrieveBillEndDates at 0x0000020AB1AE9790> method ran successfully.
+2021-05-05 18:24:13,947 : act725rck8Log : INFO - <function findMostRecentEndDate at 0x0000020AB1AE9820> method ran successfully.
+2021-05-05 18:24:13,949 : act725rck8Log : INFO - <function createStartDate at 0x0000020AB1AE98B0> method ran successfully.
+2021-05-05 18:24:13,953 : act725rck8Log : INFO - <function getSA at 0x0000020AB1AE9940> method ran successfully.
+2021-05-05 18:24:13,956 : act725rck8Log : INFO - <function getSP at 0x0000020AB1AE99D0> method ran successfully.
+2021-05-05 18:24:13,960 : act725rck8Log : INFO - <function getMeter at 0x0000020AB1AE9A60> method ran successfully.
+2021-05-05 18:24:13,965 : act725rck8Log : INFO - <function getGasUsage at 0x0000020AB1ABC550> method ran successfully.
+2021-05-05 18:24:13,966 : act725rck8Log : INFO - <function convertToTherms at 0x0000020AB1ABC3A0> method ran successfully.
+2021-05-05 18:24:13,971 : act725rck8Log : INFO - <function getRateSchedule at 0x0000020AB1ABC280> method ran successfully.
+2021-05-05 18:24:13,972 : act725rck8Log : INFO - <function getAGLFixedCharge at 0x0000020AB1ABC940> method ran successfully.
+2021-05-05 18:24:13,974 : act725rck8Log : INFO - <function calculateGasCharge at 0x0000020AB1ABC5E0> method ran successfully.
