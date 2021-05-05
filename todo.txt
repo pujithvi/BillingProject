@@ -6,3 +6,7 @@
 5) add bill to bill table; for this (and bill output), it could help to create a bill class
 6) modularization
 
+TODO 5/5/21
+1) check all the event exceptions and make sure we are handling them correctly
+2) work on a bill class/a better method for billing (maybe?)
+
