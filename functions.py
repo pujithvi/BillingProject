@@ -381,7 +381,7 @@ def logger(account, text = '', method="", successful = False):
 # Method for outputting total bill
 # Premilinary Attempt
 
-
+#Could create a bill object and go from there
 def billOutput(account='', initialDate='', finalDate='', gasUsage='', AGLCharge='', usageCharge='', fail=False, text = ""):
     outF = open(account + str(initialDate).split(' ')[0] + "Bill.txt", 'w')
 
@@ -403,3 +403,4 @@ def billOutput(account='', initialDate='', finalDate='', gasUsage='', AGLCharge=
 
     outF.close()
     return
+
