@@ -1,6 +1,0 @@
-Account: act777kod7
-Billing Period: 0020-01-05 to 0020-02-07
-AGL Fixed Charge: 28.47
-Total Gas Usage (Therms): 183.2208293153327
-Gas Usage Charge: 93.44262295081968
-Total Cost: 121.91262295081968

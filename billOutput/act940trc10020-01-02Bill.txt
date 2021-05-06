@@ -1,6 +1,6 @@
 Account: act940trc1
 Billing Period: 0020-01-02 to 0020-02-01
 AGL Fixed Charge: 28.47
-Total Gas Usage (Therms): 238.18707810993251
-Gas Usage Charge: 121.47540983606558
-Total Cost: 149.94540983606558
+Total Gas Usage (Therms): 238.19
+Gas Usage Charge: 121.48
+Total Cost: 149.95

@@ -1,6 +1,7 @@
 from functions import *
 from logger import *
 from billClass import *
+from datetime import date, timedelta
 import os
 import shutil
 
@@ -94,16 +95,17 @@ for account in accountsToProcess:
         continue
     # print(AGLCharge)
 
-    usageCharge = logThis(l, calculateGasCharge, (rateSchedule, gasUsage, Rate_dictionary), {})
+    usageCharge = round(logThis(l, calculateGasCharge, (rateSchedule, gasUsage, Rate_dictionary), {}), 2)
     if usageCharge is None:
         continue
     # print(usageCharge)
 
-    totalCost = AGLCharge + usageCharge
+    gasUsage = round(gasUsage, 2)
+    totalCost = round(AGLCharge + usageCharge, 2)
  
     # print(totalCost)
     # Could create a bill object and go from there
-    # finish this: bill = Bill(bill_id='SFGAS' + str(bill_num) + 'Y21', )
-
+    bill = Bill(bill_cyc_cd=cycCode, start_dt=initialDate, end_dt=finalDate, acct_id=account, bill_dt= date.today(), rs_cd=rateSchedule, calc_amt=totalCost)
+    print(bill.bill_id, ' ' , bill.start_dt , ' ' , bill.end_dt , ' ' , bill.acct_id , ' ' , bill.bill_dt , ' ' , bill.due_dt , ' ' , bill.rs_cd , ' ' , bill.calc_amt , bill.descr_on_bill)
     billOutput(account, initialDate, finalDate, gasUsage, AGLCharge, usageCharge, path=billOutput_path)
     # Note: billOutput methods aren't logged yet in the case that they get changed in the future

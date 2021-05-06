@@ -1,6 +1,0 @@
-Account: act791ulp3
-Billing Period: 0019-12-15 to 0020-01-16
-AGL Fixed Charge: 28.47
-Total Gas Usage (Therms): 419.47926711668276
-Gas Usage Charge: 222.32401157184188
-Total Cost: 250.79401157184188
