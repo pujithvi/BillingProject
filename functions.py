@@ -365,24 +365,62 @@ def calculateGasCharge(SARateScheduleCode, usage, dictionary):
 
 # Method for outputting total bill
 # Preliminary Attempt
-def billOutput(account='', initialDate='', finalDate='', gasUsage='', AGLCharge='', usageCharge='', fail=False, text = "", path=""):
+# def billOutput(account='', initialDate='', finalDate='', gasUsage='', AGLCharge='', usageCharge='', fail=False, text = "", path=""):
+    
+#     os.chdir(path)
+
+#     with open(account + str(initialDate).split(' ')[0] + "Bill.txt", 'w') as file:
+#         if account != '':
+#             print("Account: " + account, file=file)
+#         if initialDate != '' and finalDate != '':
+#             print("Billing Period: " + str(initialDate).split(' ')[0] + ' to ' + str(finalDate).split(' ')[0], file=file)
+#         if AGLCharge != '':
+#             print("AGL Fixed Charge: " + str(AGLCharge), file=file)
+#         if gasUsage != '':
+#             print('Total Gas Usage (Therms): ' + str(gasUsage), file=file)
+#         if usageCharge != '':
+#             print("Gas Usage Charge: " + str(usageCharge), file=file)
+#         if AGLCharge != '' and usageCharge != '':
+#             print("Total Cost: " + str(AGLCharge + usageCharge), file=file)
+
+#         #
+#         if fail:
+#             print(text, file=file)
+
+
+#Include below functions as methods inside bill class instead?
+def billOutput(bill, fail = False, text = '', path = ''):
     os.chdir(path)
+    account = bill.acct_id
+    initialDate = bill.start_dt
+    finalDate = bill.end_dt
+    AGLCharge = bill.agl_charge
+    gasUsage = bill.gas_usage
+    usageCharge = bill.calc_amt
 
     with open(account + str(initialDate).split(' ')[0] + "Bill.txt", 'w') as file:
-        if account != '':
+        if account != None:
             print("Account: " + account, file=file)
-        if initialDate != '' and finalDate != '':
+        if initialDate != None and finalDate != None:
             print("Billing Period: " + str(initialDate).split(' ')[0] + ' to ' + str(finalDate).split(' ')[0], file=file)
-        if AGLCharge != '':
+        if AGLCharge != None:
             print("AGL Fixed Charge: " + str(AGLCharge), file=file)
-        if gasUsage != '':
+        if gasUsage != None:
             print('Total Gas Usage (Therms): ' + str(gasUsage), file=file)
-        if usageCharge != '':
+        if usageCharge != None:
             print("Gas Usage Charge: " + str(usageCharge), file=file)
-        if AGLCharge != '' and usageCharge != '':
+        if AGLCharge != None and usageCharge != None:
             print("Total Cost: " + str(AGLCharge + usageCharge), file=file)
 
         #
         if fail:
             print(text, file=file)
 
+
+def addtoBillTable(bill):
+    cur = con.cursor()
+    sql_insert = '''insert into hs_ci_bill values (:bill_id, :bill_cyc_cd, :start_dt, :end_dt, :acct_id, :bill_dt, :due_dt, :rs_cd, :calc_amt, :descr_on_bill, :exp_msg)'''
+    cur.execute(sql_insert, bill_id = bill.bill_id, bill_cyc_cd=bill.bill_cyc_cd, start_dt = bill.start_dt, end_dt = bill.end_dt, acct_id = bill.acct_id, bill_dt = bill.bill_dt, due_dt = bill.due_dt, rs_cd = bill.rs_cd.strip(), calc_amt=bill.calc_amt, descr_on_bill=bill.descr_on_bill, exp_msg = bill.exp_msg)
+    con.commit()
+    cur.close()
+    return

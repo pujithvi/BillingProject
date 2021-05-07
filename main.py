@@ -60,19 +60,28 @@ for account in accountsToProcess:
 
     serviceAgreement = logThis(l, getSA, (account,), {})
     if serviceAgreement is None:
-        billOutput(account=account, fail=True, text="No service agreement for this account.", path=billOutput_path)
+        bill = Bill(cycCode, acct_id=account, exp_msg="No service agreement for this account.")
+        billOutput(bill, fail = True, text="No service agreement for this account.", path=billOutput_path)
+        #addtoBillTable(bill)
+        #billOutput(account=account, fail=True, text="No service agreement for this account.", path=billOutput_path)
         continue
     # print(serviceAgreement)
 
     servicePoint = logThis(l, getSP, (serviceAgreement,), {})
     if servicePoint is None:
-        billOutput(account=account, fail=True, text="No service point for this account.", path=billOutput_path)
+        bill = Bill(cycCode, acct_id=account, exp_msg='No service point for this account.')
+        billOutput(bill, fail =True, text="No service point for this account.", path=billOutput_path)
+        #addtoBillTable(bill)
+        #billOutput(account=account, fail=True, text="No service point for this account.", path=billOutput_path)
         continue
     # print(servicePoint)
 
     meter = logThis(l, getMeter, (servicePoint,), {})
     if meter is None:
-        billOutput(account=account, fail=True, text="No meter for this account.", path=billOutput_path)
+        bill = Bill(cycCode, acct_id=account, exp_msg="No meter for this account.")
+        billOutput(bill, fail = True, text="No meter for this account.", path=billOutput_path)
+        #addtoBillTable(bill)
+        #billOutput(account=account, fail=True, text="No meter for this account.", path=billOutput_path)
         continue
     # print('meter:', meter)
 
@@ -88,7 +97,7 @@ for account in accountsToProcess:
     rateSchedule = logThis(l, getRateSchedule, (account,), {})
     if rateSchedule is None:
         continue
-    # print(rateSchedule)
+    #print(rateSchedule)
 
     AGLCharge = logThis(l, getAGLFixedCharge, (rateSchedule, AGLCharge_dictionary), {})
     if AGLCharge is None:
@@ -104,8 +113,10 @@ for account in accountsToProcess:
     totalCost = round(AGLCharge + usageCharge, 2)
  
     # print(totalCost)
-    # Could create a bill object and go from there
-    bill = Bill(bill_cyc_cd=cycCode, start_dt=initialDate, end_dt=finalDate, acct_id=account, bill_dt= date.today(), rs_cd=rateSchedule, calc_amt=totalCost)
-    print(bill.bill_id, ' ' , bill.start_dt , ' ' , bill.end_dt , ' ' , bill.acct_id , ' ' , bill.bill_dt , ' ' , bill.due_dt , ' ' , bill.rs_cd , ' ' , bill.calc_amt , bill.descr_on_bill)
-    billOutput(account, initialDate, finalDate, gasUsage, AGLCharge, usageCharge, path=billOutput_path)
+    
+    bill = Bill(bill_cyc_cd=cycCode, start_dt=initialDate, end_dt=finalDate, agl_charge=AGLCharge, gas_usage=gasUsage, acct_id=account, bill_dt= date.today(), rs_cd=rateSchedule, calc_amt=totalCost)
+    
+    billOutput(bill, path=billOutput_path)
+    addtoBillTable(bill)
+    #billOutput(account, initialDate, finalDate, gasUsage, AGLCharge, usageCharge, path=billOutput_path)
     # Note: billOutput methods aren't logged yet in the case that they get changed in the future

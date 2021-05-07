@@ -1,5 +1,5 @@
-2021-05-06 16:33:08,166 : act199art0Log : INFO - <function retrieveBillEndDates at 0x000001E699C08790> method ran successfully.
-2021-05-06 16:33:08,169 : act199art0Log : INFO - <function findMostRecentEndDate at 0x000001E699C08820> method ran successfully.
-2021-05-06 16:33:08,174 : act199art0Log : INFO - <function createStartDate at 0x000001E699C088B0> method ran successfully.
-2021-05-06 16:33:08,179 : act199art0Log : ERROR - Error in <function getSA at 0x000001E699C08940> method: ORA-01403: no data found
+2021-05-06 21:33:10,547 : act199art0Log : INFO - <function retrieveBillEndDates at 0x00000192835188B0> method ran successfully.
+2021-05-06 21:33:10,548 : act199art0Log : INFO - <function findMostRecentEndDate at 0x0000019283518940> method ran successfully.
+2021-05-06 21:33:10,549 : act199art0Log : INFO - <function createStartDate at 0x00000192835189D0> method ran successfully.
+2021-05-06 21:33:10,550 : act199art0Log : ERROR - Error in <function getSA at 0x0000019283518A60> method: ORA-01403: no data found
 ORA-06512: at line 1
