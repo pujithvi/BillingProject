@@ -61,7 +61,6 @@ for account in accountsToProcess:
     if serviceAgreement is None:
         bill = Bill(cycCode, acct_id=account, exp_msg="No service agreement for this account.")
         billOutput(bill, fail = True, text="No service agreement for this account.", path=billOutput_path)
-        #addtoBillTable(bill)
         #billOutput(account=account, fail=True, text="No service agreement for this account.", path=billOutput_path)
         continue
     # print(serviceAgreement)
@@ -70,7 +69,6 @@ for account in accountsToProcess:
     if servicePoint is None:
         bill = Bill(cycCode, acct_id=account, exp_msg='No service point for this account.')
         billOutput(bill, fail = True, text="No service point for this account.", path=billOutput_path)
-        #addtoBillTable(bill)
         #billOutput(account=account, fail=True, text="No service point for this account.", path=billOutput_path)
         continue
     # print(servicePoint)
@@ -79,7 +77,6 @@ for account in accountsToProcess:
     if meter is None:
         bill = Bill(cycCode, acct_id=account, exp_msg="No meter for this account.")
         billOutput(bill, fail = True, text="No meter for this account.", path=billOutput_path)
-        #addtoBillTable(bill)
         #billOutput(account=account, fail=True, text="No meter for this account.", path=billOutput_path)
         continue
     # print('meter:', meter)

@@ -6,3 +6,5 @@ AGL Fixed Charge: 28.47
 Total Gas Usage (Therms): 238.19
 Gas Usage Charge: 149.95
 Total Cost: 178.42
+Bill Date: 2021-05-06
+Due Date: 2021-07-08

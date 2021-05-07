@@ -403,7 +403,8 @@ def billOutput(bill, fail = False, text = '', path = ''):
     dueDate = bill.due_dt
 
     with open(account + str(initialDate).split(' ')[0] + "Bill.txt", 'w') as file:
-        print("Bill ID:", billID, file = file)
+        if billID != None:
+            print("Bill ID:", billID, file = file)
         print('Bill Cycle Code:', billCycCode, file=file)
         if account != None:
             print("Account: " + account, file=file)
@@ -418,9 +419,9 @@ def billOutput(bill, fail = False, text = '', path = ''):
         if AGLCharge != None and usageCharge != None:
             print("Total Cost: " + str(AGLCharge + usageCharge), file=file)
         if billDate != None:
-            print('Bill Date:', billDate)
+            print('Bill Date:', billDate, file=file)
         if dueDate != None:
-            print('Due Date:', dueDate)
+            print('Due Date:', dueDate, file=file)
 
         #
         if fail:

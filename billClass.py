@@ -7,7 +7,10 @@ con = cx_Oracle.connect("cisadm", "cisadm", dsn)
 class Bill:
     
     def __init__(self, bill_cyc_cd=None, start_dt=None, end_dt=None, acct_id=None, agl_charge = None, gas_usage = None, bill_dt=None, rs_cd=None, calc_amt=None, exp_msg ='No errors have been found'):
-        self.bill_id = self.createBill_ID()
+        if calc_amt != None:
+            self.bill_id = self.createBill_ID()
+        else:
+            self.bill_id=None
         self.bill_cyc_cd = bill_cyc_cd
         if start_dt != None:
             self.start_dt = datetime.date(start_dt.year, start_dt.month, start_dt.day)

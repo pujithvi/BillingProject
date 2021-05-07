@@ -1,4 +1,3 @@
-Bill ID: SFGAS160Y21
 Bill Cycle Code: M02 
 Account: act199art0
 No service agreement for this account.
