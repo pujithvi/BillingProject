@@ -397,8 +397,14 @@ def billOutput(bill, fail = False, text = '', path = ''):
     AGLCharge = bill.agl_charge
     gasUsage = bill.gas_usage
     usageCharge = bill.calc_amt
+    billID = bill.bill_id
+    billCycCode = bill.bill_cyc_cd
+    billDate = bill.bill_dt
+    dueDate = bill.due_dt
 
     with open(account + str(initialDate).split(' ')[0] + "Bill.txt", 'w') as file:
+        print("Bill ID:", billID, file = file)
+        print('Bill Cycle Code:', billCycCode, file=file)
         if account != None:
             print("Account: " + account, file=file)
         if initialDate != None and finalDate != None:
@@ -411,6 +417,10 @@ def billOutput(bill, fail = False, text = '', path = ''):
             print("Gas Usage Charge: " + str(usageCharge), file=file)
         if AGLCharge != None and usageCharge != None:
             print("Total Cost: " + str(AGLCharge + usageCharge), file=file)
+        if billDate != None:
+            print('Bill Date:', billDate)
+        if dueDate != None:
+            print('Due Date:', dueDate)
 
         #
         if fail:

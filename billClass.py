@@ -21,14 +21,14 @@ class Bill:
         if bill_dt != None:
             self.bill_dt = datetime.date(bill_dt.year, bill_dt.month, bill_dt.day)
         else:
-            self.bill_dt=None
+            self.bill_dt = None
         self.agl_charge=agl_charge
         self.gas_usage = gas_usage
         if bill_dt != None:
             self.due_dt = self.getDueDate(self.bill_dt, 45)
             self.due_dt = datetime.date(self.due_dt.year, self.due_dt.month, self.due_dt.day)
         else:
-            due_dt = None
+            self.due_dt = None
         self.rs_cd = rs_cd
         self.calc_amt = calc_amt
         if self.calc_amt != None and self.start_dt!= None and self.end_dt!=None:

@@ -42,7 +42,6 @@ for account in accountsToProcess:
     l_fileNameTwo = f'{log_path}\{account}.txt'
     l = setup_logger(account, l_fileNameTwo)
 
-    # Need to do like this for every method (done)
     billEndDates = logThis(l, retrieveBillEndDates, (account,), {})
     if billEndDates is None:
         continue
@@ -70,7 +69,7 @@ for account in accountsToProcess:
     servicePoint = logThis(l, getSP, (serviceAgreement,), {})
     if servicePoint is None:
         bill = Bill(cycCode, acct_id=account, exp_msg='No service point for this account.')
-        billOutput(bill, fail =True, text="No service point for this account.", path=billOutput_path)
+        billOutput(bill, fail = True, text="No service point for this account.", path=billOutput_path)
         #addtoBillTable(bill)
         #billOutput(account=account, fail=True, text="No service point for this account.", path=billOutput_path)
         continue
@@ -120,3 +119,5 @@ for account in accountsToProcess:
     addtoBillTable(bill)
     #billOutput(account, initialDate, finalDate, gasUsage, AGLCharge, usageCharge, path=billOutput_path)
     # Note: billOutput methods aren't logged yet in the case that they get changed in the future
+
+    #can't add failed bills to bill table because some columns are not nullable
