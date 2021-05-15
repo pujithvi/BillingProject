@@ -186,7 +186,8 @@ def getGasUsage(meterConfigID, startDate):
 
     InitialReadBind = cur.var(int)
 
-    sql_retrieveInitialRead = """select REG_READING, READ_DTTM from HS_CI_MR where MTR_CONFIG_ID = :meterConfigID and READ_TYPE_FLG != \'20\' and READ_TYPE_FLG != \'30\' order by READ_DTTM asc """
+    sql_retrieveInitialRead = """select REG_READING, READ_DTTM from HS_CI_MR where MTR_CONFIG_ID = :meterConfigID and READ_TYPE_FLG != \'20\' 
+    and READ_TYPE_FLG != \'30\' order by READ_DTTM asc """
 
     startDate = startDate.date()
     cur.execute(sql_retrieveInitialRead,
@@ -210,7 +211,8 @@ def getGasUsage(meterConfigID, startDate):
 
     FinalReadBind = cur.var(int)
 
-    sql_retrieveFinalRead = """select REG_READING, READ_DTTM from HS_CI_MR where MTR_CONFIG_ID = :meterConfigID and READ_TYPE_FLG != \'20\' and READ_TYPE_FLG != \'30\' and REG_READING != :initialReading order by READ_DTTM asc """
+    sql_retrieveFinalRead = """select REG_READING, READ_DTTM from HS_CI_MR where MTR_CONFIG_ID = :meterConfigID and READ_TYPE_FLG != \'20\' 
+    and READ_TYPE_FLG != \'30\' and REG_READING != :initialReading order by READ_DTTM asc """
     # (temporary) fix for monthly gas usage
 
     cur.execute(sql_retrieveFinalRead, meterConfigID=meterConfigID,
