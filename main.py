@@ -110,7 +110,8 @@ for account in accountsToProcess:
  
     # print(totalCost)
     
-    bill = Bill(bill_cyc_cd=cycCode, start_dt=initialDate, end_dt=finalDate, agl_charge=AGLCharge, gas_usage=gasUsage, acct_id=account, bill_dt= date.today(), rs_cd=rateSchedule, calc_amt=totalCost)
+    bill = Bill(bill_cyc_cd=cycCode, start_dt=initialDate, end_dt=finalDate, agl_charge=AGLCharge, gas_usage=gasUsage,
+                acct_id=account, bill_dt= date.today(), rs_cd=rateSchedule, calc_amt=totalCost)
     
     billOutput(bill, path=billOutput_path)
     addtoBillTable(bill)
