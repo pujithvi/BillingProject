@@ -6,7 +6,8 @@ con = cx_Oracle.connect("cisadm", "cisadm", dsn)
 
 class Bill:
     
-    def __init__(self, bill_cyc_cd=None, start_dt=None, end_dt=None, acct_id=None, agl_charge = None, gas_usage = None, bill_dt=None, rs_cd=None, calc_amt=None, exp_msg ='No errors have been found'):
+    def __init__(self, bill_cyc_cd=None, start_dt=None, end_dt=None, acct_id=None, agl_charge = None, gas_usage = None, 
+                 bill_dt=None, rs_cd=None, calc_amt=None, exp_msg ='No errors have been found'):
         if calc_amt != None:
             self.bill_id = self.createBill_ID()
         else:
@@ -35,7 +36,8 @@ class Bill:
         self.rs_cd = rs_cd
         self.calc_amt = calc_amt
         if self.calc_amt != None and self.start_dt!= None and self.end_dt!=None:
-            self.descr_on_bill = 'A charge of ' + str(self.calc_amt) +  ' is produced for your gas consumption during service period starting ' + str(self.start_dt) + ' up to end date '  + str(self.end_dt)
+            self.descr_on_bill = 'A charge of ' + str(self.calc_amt) +  ' is produced for your gas consumption during service period starting ' + 
+            str(self.start_dt) + ' up to end date '  + str(self.end_dt)
         self.exp_msg = exp_msg
 
     def createBill_ID(self):
