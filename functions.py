@@ -430,8 +430,11 @@ def billOutput(bill, fail = False, text = '', path = ''):
 
 def addtoBillTable(bill):
     cur = con.cursor()
-    sql_insert = '''insert into hs_ci_bill values (:bill_id, :bill_cyc_cd, :start_dt, :end_dt, :acct_id, :bill_dt, :due_dt, :rs_cd, :calc_amt, :descr_on_bill, :exp_msg)'''
-    cur.execute(sql_insert, bill_id = bill.bill_id, bill_cyc_cd=bill.bill_cyc_cd, start_dt = bill.start_dt, end_dt = bill.end_dt, acct_id = bill.acct_id, bill_dt = bill.bill_dt, due_dt = bill.due_dt, rs_cd = bill.rs_cd.strip(), calc_amt=bill.calc_amt, descr_on_bill=bill.descr_on_bill, exp_msg = bill.exp_msg)
+    sql_insert = '''insert into hs_ci_bill values (:bill_id, :bill_cyc_cd, :start_dt, :end_dt, :acct_id, :bill_dt, 
+    :due_dt, :rs_cd, :calc_amt, :descr_on_bill, :exp_msg)'''
+    cur.execute(sql_insert, bill_id = bill.bill_id, bill_cyc_cd=bill.bill_cyc_cd, start_dt = bill.start_dt, 
+                end_dt = bill.end_dt, acct_id = bill.acct_id, bill_dt = bill.bill_dt, due_dt = bill.due_dt, 
+                rs_cd = bill.rs_cd.strip(), calc_amt=bill.calc_amt, descr_on_bill=bill.descr_on_bill, exp_msg = bill.exp_msg)
     con.commit()
     cur.close()
     return
